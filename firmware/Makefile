@@ -12,7 +12,7 @@
 DEFINES += -DF_CPU=12000000
 COMPILE = avr-gcc -Wall -O2 -Iusbdrv -I. -mmcu=atmega8 $(DEFINES)
 
-OBJECTS = usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o main.o lcd.o 1602.o
+OBJECTS = usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o main.o lcd.o 1602.o twi.o
 
 
 # symbolic targets:
