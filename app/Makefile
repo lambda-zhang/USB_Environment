@@ -13,4 +13,4 @@ $(APP): $(APP).c
 	$(CC) -Wall -o $@ $(APP).c -lusb
 
 run:
-	./${APP} 0 1 "1"
+	./${APP}
