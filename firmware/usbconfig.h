@@ -88,15 +88,15 @@ must be adapted to your hardware.
 #define	USB_CFG_DEVICE_VERSION	0x09, 0x01
 /* Version number of the device: Minor number first, then major number.
  */
-#define	USB_CFG_VENDOR_NAME		'T', 'i', 'l', 'l', ' ', 'H', 'a', 'r', 'b', 'a', 'u', 'm'
-#define	USB_CFG_VENDOR_NAME_LEN	12
+#define	USB_CFG_VENDOR_NAME		'L', 'a', 'm', 'b', 'd', 'a'
+#define	USB_CFG_VENDOR_NAME_LEN	6
 /* These two values define the vendor name returned by the USB device. The name
  * must be given as a list of characters under single quotes. The characters
  * are interpreted as Unicode (UTF-16) entities.
  * If you don't want a vendor name string, undefine these macros.
  */
-#define	USB_CFG_DEVICE_NAME		'L', 'C', 'D', '2', 'U', 'S', 'B',' ','I','n','t','e','r','f','a','c','e'
-#define	USB_CFG_DEVICE_NAME_LEN	17
+#define	USB_CFG_DEVICE_NAME		'L', 'a', 'm', 'b', 'd', 'a', ' ', 'D', 'e', 'v', 'i', 'c', 'e'
+#define	USB_CFG_DEVICE_NAME_LEN	13
 /* Same as above for the device name. If you don't want a device name, undefine
  * the macros.
  */

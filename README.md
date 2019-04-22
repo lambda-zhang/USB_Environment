@@ -41,3 +41,8 @@ E:  Ad=81(I) Atr=03(Int.) MxPS=   8 Ivl=10ms
 $ sudo cat /sys/kernel/debug/usb/usbmon/3u
 $ sudo cat /sys/kernel/debug/usb/usbmon/3t
 ```
+
+### golang
+```
+$ go get -u -v github.com/google/gousb github.com/google/gousb/usbid
+```
