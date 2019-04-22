@@ -146,6 +146,8 @@ void twi_wait_complete(void)
 	// wait for i2c interface to complete operation
 	while ((!(TWCR & (1<<TWINT))) && (i < 90))
 		i++;
+	//if(i>=90)
+	//	PORTB &= ~(1<<2);
 }
 
 unsigned char twi_start(void)

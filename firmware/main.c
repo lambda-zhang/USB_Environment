@@ -18,7 +18,7 @@
 
 typedef struct _env {
 	volatile unsigned long temperature;
-//	volatile unsigned long humidity;
+	volatile unsigned long humidity;
 	volatile unsigned long pressure;
 } env;
 
@@ -89,7 +89,7 @@ uchar usbFunctionSetup(uchar data[8]) {
 				case 1: // all
 					penv = (env *)replyBuf;
 					penv->temperature = environment.temperature;
-					//penv->humidity = environment.humidity;
+					penv->humidity = environment.humidity;
 					penv->pressure = environment.pressure;
 					return sizeof(environment);
 					break;
@@ -279,13 +279,13 @@ int main(void)
 	sei();
 
 	DDRB = 0xff;
-	PORTB &= ~(1<<2);
+	PORTB |= (1<<2);
 
 	twi_init();
 	BMP085_Calibration();
-	environment.temperature = 12;
-	//environment.humidity = 1;
-	environment.pressure = 2;
+	environment.temperature = 100;
+	environment.humidity = 101;
+	environment.pressure = 102;
 
 	/* main event loop */
 	for(;;) {
