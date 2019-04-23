@@ -5,17 +5,20 @@
 #include <util/delay.h>
 #include "usbdrv.h"
 #include "oddebug.h"
+#include "atmega_bmp085_lib.h"
 
 #define VERSION_MAJOR 0
 #define VERSION_MINOR 1
 
 typedef struct _env {
-	volatile unsigned short temperature;
-	volatile unsigned short humidity;
-	volatile unsigned short pressure;
+	volatile unsigned long temperature;
+	volatile unsigned long humidity;
+	volatile unsigned long pressure;
 } env;
 
 env environment;
+int16_t BMP085_calibration_int16_t[8];
+uint16_t BMP085_calibration_uint16_t[3];
 
 void set_led(int val)
 {
@@ -24,6 +27,7 @@ void set_led(int val)
 
 uchar usbFunctionSetup(uchar data[8]) {
 	env *penv;
+	uint16_t *ptest;
 	static uchar replyBuf[128];
 	usbMsgPtr = replyBuf;
 	//uchar len = (data[1] & 7)+1;       // 1 .. 4 bytes
@@ -67,9 +71,6 @@ uchar usbFunctionSetup(uchar data[8]) {
 					return 2;
 					break;
 				case 1: // all
-					environment.temperature++;
-					environment.humidity++;
-					environment.pressure++;
 					penv = (env *)replyBuf;
 					penv->temperature = environment.temperature;
 					penv->humidity = environment.humidity;
@@ -79,13 +80,16 @@ uchar usbFunctionSetup(uchar data[8]) {
 				case 2: // controller map
 					break;
 				case 3: // controller map
-					replyBuf[0] = 'l';
-					replyBuf[1] = 'a';
-					replyBuf[2] = 'm';
-					replyBuf[3] = 'b';
-					replyBuf[4] = 'd';
-					replyBuf[5] = 'd';
-					return 6;
+					ptest = (uint16_t *)replyBuf;
+					ptest[0] = BMP085_calibration_uint16_t[0];
+					ptest[1] = BMP085_calibration_uint16_t[1];
+					ptest[2] = BMP085_calibration_uint16_t[2];
+					ptest[3] = BMP085_calibration_uint16_t[3];
+					ptest[4] = BMP085_calibration_uint16_t[4];
+					ptest[5] = BMP085_calibration_uint16_t[5];
+					ptest[6] = BMP085_calibration_uint16_t[6];
+					ptest[7] = BMP085_calibration_uint16_t[7];
+					return 32;
 					break;
 				default:
 					// must not happen ...
@@ -101,6 +105,10 @@ uchar usbFunctionSetup(uchar data[8]) {
 
 int main(void)
 {
+    int32_t temperature = 0;
+    int32_t pressure = 0;
+    uint8_t error_code=0;
+
 	//	wdt_enable(WDTO_1S);
 	/* let debug routines init the uart if they want to */
 	odDebugInit();
@@ -117,13 +125,19 @@ int main(void)
 	DDRB = 0xff;
 	PORTB &= ~(1<<2);
 
-	environment.temperature = 0;
-	environment.humidity = 1;
+	environment.temperature = 77;
+	environment.humidity = 66;
 	environment.pressure = 2;
+
+    i2cSetBitrate(1000);        //Initialize TWI 1000kHz
+    BMP085_Calibration(BMP085_calibration_int16_t, BMP085_calibration_uint16_t,&error_code);////Initialize BMP085
 
 	/* main event loop */
 	for(;;) {
 		//		wdt_reset();
+		bmp085Convert(BMP085_calibration_int16_t, BMP085_calibration_uint16_t,&temperature, &pressure,&error_code);
+		environment.temperature = temperature;
+		environment.pressure = pressure;
 		usbPoll();
 	}
 	return 0;

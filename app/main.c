@@ -30,9 +30,9 @@
 #define UE_GET_ENV        (UE_GET | (1<<3))
 
 typedef struct _env {
-    unsigned short temperature;
-    unsigned short humidity;
-    unsigned short pressure;
+    unsigned int temperature;
+    unsigned int humidity;
+    unsigned int pressure;
 } env;
 
 usb_dev_handle      *handle = NULL;
