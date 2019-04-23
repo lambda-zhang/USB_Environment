@@ -17,9 +17,9 @@ type USB_env struct {
 }
 
 type EnvVal struct {
-	Temperature uint32
-	Humidity    uint32
-	Pressure    uint32
+	Temperature int32
+	Humidity    int32
+	Pressure    int32
 }
 
 var (
