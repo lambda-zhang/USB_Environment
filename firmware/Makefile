@@ -7,12 +7,12 @@
 # License: Proprietary, free under certain conditions. See Documentation.
 # This Revision: $Id: Makefile.avrusb,v 1.1 2007/01/14 12:12:27 harbaum Exp $
 
-# DEFINES += -DBWCT_COMPAT 
+# DEFINES += -DBWCT_COMPAT
 # DEFINES += -DDEBUG_LEVEL=1
 DEFINES += -DF_CPU=12000000
 COMPILE = avr-gcc -Wall -O2 -Iusbdrv -I. -mmcu=atmega8 $(DEFINES)
 
-OBJECTS = usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o main.o atmega_bmp085_lib.o
+OBJECTS = usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o atmega_bmp085_lib.o twi.o si7021.o main.o
 
 
 # symbolic targets:

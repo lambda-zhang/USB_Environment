@@ -30,9 +30,10 @@
 #define UE_GET_ENV        (UE_GET | (1<<3))
 
 typedef struct _env {
-    unsigned int temperature;
-    unsigned int humidity;
+    int temperature;
     unsigned int pressure;
+    int temperature2;
+    unsigned int humidity;
 } env;
 
 usb_dev_handle      *handle = NULL;
@@ -86,7 +87,7 @@ int ue_get_environment(void) {
 		return -1;
 	}
 	env *penv = (env *)buffer;
-	printf("temperature=%d humidity=%d pressure=%d\n", penv->temperature, penv->humidity, penv->pressure);
+	printf("temperature=%d humidity=%d pressure=%d temperature2=%d\n", penv->temperature, penv->humidity, penv->pressure, penv->temperature2);
 	return 0;
 }
 

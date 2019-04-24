@@ -53,11 +53,6 @@
 //----------------------------------------
 // Prototypes
 //----------------------------------------
-void input_init(void);
-void BMP085_Calibration(int16_t BMP085_calibration_int16_t[],int16_t BMP085_calibration_uint16_t[], uint8_t* errorcode);
-uint16_t bmp085ReadShort(uint8_t address, uint8_t* errorcode);
-int32_t bmp085ReadTemp(uint8_t* error_code);
-int32_t bmp085ReadPressure(uint8_t* errorcode);
-void bmp085Convert(int16_t BMP085_calibration_int16_t[],int16_t BMP085_calibration_uint16_t[],int32_t* temperature, int32_t* pressure, uint8_t* error_code);
-int32_t bmp085CalcAltitude(int32_t pressure);
+void BMP085_Calibration(int16_t BMP085_calibration_int16_t[],int16_t BMP085_calibration_uint16_t[]);
+void bmp085Convert(int16_t BMP085_calibration_int16_t[],int16_t BMP085_calibration_uint16_t[],int32_t* temperature, int32_t* pressure);
 #endif
