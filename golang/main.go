@@ -1,11 +1,16 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"net"
+	"net/http"
+	"os"
 
 	c "./collector"
 	s "./cron"
 	m "./models"
+	r "./router"
 )
 
 var period_sec int = 5
@@ -23,18 +28,45 @@ func callback() {
 			t.Save()
 			h.Save()
 			p.Save()
-
-			ret, _ := t.SearchOneDay(2019, 4, 24)
-			log.Println(ret)
 		}
 	}
 	usbenv.USB_close()
+}
+
+func atexit() {
+	log.Println(">>> exit")
+}
+
+func printlistenaddr(port string) {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		panic(err)
+	}
+	for _, address := range addrs {
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				log.Printf("http://%s%s", ipnet.IP.String(), port)
+			}
+		}
+	}
 }
 
 func main() {
 	_setinterval := s.New(period_sec, callback)
 	_setinterval.Start()
 
-	select {}
-	return
+	router := r.Router()
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9000"
+	}
+	endPoint := fmt.Sprintf(":%s", port)
+
+	defer atexit()
+
+	printlistenaddr(endPoint)
+	if err := http.ListenAndServe(endPoint, router); err != nil {
+		log.Fatal(err)
+	}
 }
