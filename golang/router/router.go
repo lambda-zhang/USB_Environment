@@ -42,5 +42,8 @@ func Router() *gin.Engine {
 
 	r.GET("/ping", ctr.Pong)
 	r.GET("/temperature", ctr.GetTemperature)
+	r.GET("/humidity", ctr.GetHumidity)
+	r.GET("/pressure", ctr.GetPressure)
+	r.GET("/env", ctr.GetEnviroment)
 	return r
 }
