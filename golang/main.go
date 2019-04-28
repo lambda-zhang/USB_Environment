@@ -15,6 +15,7 @@ import (
 
 var period_sec int = 5
 var usbenv c.USB_env
+var ledon uint16 = 0
 
 func callback() {
 	err := usbenv.USB_init()
@@ -28,6 +29,13 @@ func callback() {
 			t.Save()
 			h.Save()
 			p.Save()
+
+			if ledon != 0 {
+				ledon = 0
+			} else {
+				ledon = 1
+			}
+			usbenv.Set_LED(ledon)
 		}
 	}
 	usbenv.USB_close()
