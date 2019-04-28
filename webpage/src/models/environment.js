@@ -40,7 +40,8 @@ function _getdata (data) {
         splitLine: {show: false},
         type: 'value',
         name: '气压hPa',
-        max: 999,
+        max: 1100,
+        min: 500,
         position: 'right',
         axisTick: {inside: 'false', length: 10}
       }
