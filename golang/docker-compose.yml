@@ -1,0 +1,46 @@
+# Use postgres
+version: '2'
+
+services:
+  db:
+    image: lambdazhang/mysql:5.7-armv7l
+    container_name: "db"
+    restart: always
+    environment:
+        MYSQL_ROOT_PASSWORD: lambda
+        MYSQL_DATABASE: lambda
+        MYSQL_USER: lambda
+        MYSQL_PASSWORD: lambda
+    volumes:
+      - ./datadir:/var/lib/mysql
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+  web:
+    image: lambdazhang/usbenv:760b00c
+    container_name: "web"
+    restart: always
+    privileged: true
+    environment:
+      GIN_MODE: release
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DB: lambda
+      MYSQL_USR: lambda
+      MYSQL_PASSWD: lambda
+    command: sh -c "sleep 10 && ./main.arm"
+    volumes:
+        - /dev/bus/usb/:/dev/bus/usb/
+    ports:
+      - 80:9000
+    depends_on:
+      - "db"
+    links:
+      - db:db
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
