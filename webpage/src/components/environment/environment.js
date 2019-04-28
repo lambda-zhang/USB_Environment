@@ -6,7 +6,9 @@ import {color1, color2, lineItemStyle, isupdated, areaStyleMem, areaStyleSwap, t
 export default {
   name: 'cpumem',
   data () {
-    return {}
+    return {
+      timer: null
+    }
   },
   created () {
   },
@@ -21,9 +23,15 @@ export default {
     this.hourchart.showLoading({text: '加载中...'})
     this.monthchart.showLoading({text: '加载中...'})
 
-    this.drawLineHour()
-    this.drawLineDay()
-    this.drawLineMonth()
+    var that = this
+    that.drawLineHour()
+    that.drawLineDay()
+    that.drawLineMonth()
+    this.timer = setInterval(function () {
+      that.drawLineHour()
+      that.drawLineDay()
+      that.drawLineMonth()
+    }, 60*1000)
   },
   beforeDestroy () {
     window.removeEventListener("resize", this.daychart.resize)
@@ -35,6 +43,8 @@ export default {
     this.daychart.dispose()
     this.hourchart.dispose()
     this.monthchart.dispose()
+
+    this.clearInterval(this.timer)
   },
   computed: {
     listencpumeminfo() {

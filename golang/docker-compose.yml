@@ -13,6 +13,7 @@ services:
         MYSQL_PASSWORD: lambda
     volumes:
       - ./datadir:/var/lib/mysql
+      - /etc/localtime:/etc/localtime
     logging:
       driver: json-file
       options:
@@ -33,6 +34,7 @@ services:
     command: sh -c "sleep 10 && ./main.arm"
     volumes:
         - /dev/bus/usb/:/dev/bus/usb/
+        - /etc/localtime:/etc/localtime
     ports:
       - 80:9000
     depends_on:
