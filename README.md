@@ -44,5 +44,15 @@ $ sudo cat /sys/kernel/debug/usb/usbmon/3t
 
 ### golang
 ```
-$ go get -u -v github.com/google/gousb github.com/google/gousb/usbid
+$ go get -u -v github.com/Unknwon/goconfig
+$ go get -u -v github.com/gin-contrib/cors
+$ go get -u -v github.com/gin-contrib/gzip
+$ go get -u -v github.com/gin-gonic/gin
+$ go get -u -v github.com/google/gousb
+$ go get -u -v github.com/jinzhu/gorm
+$ go get -u -v github.com/jinzhu/gorm/dialects/mysql
+$ go get -u -v github.com/robfig/cron
+$ go get -u -v golang.org/x/sys/unix
+
+$ sudo apt-get install libusb-1.0-0-dev pkg-config
 ```
