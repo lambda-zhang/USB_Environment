@@ -50,6 +50,38 @@ func _search(ts time.Time, _type string, dbname string) (*[]Result, error) {
 	return &ress, ret.Error
 }
 
+// Environment 环境数值，包括温度湿度气压
+type Environment struct {
+	ID          int64     `json:"id"          gorm:"column:id"`          //"id"
+	Temperature int32     `json:"temperature" gorm:"column:temperature"` //"温度值"
+	Humidity    int32     `json:"humidity"    gorm:"column:humidity"`    //"湿度值"
+	Pressure    int32     `json:"Pressure"    gorm:"column:Pressure"`    //"气压值"
+	DevID       int64     `json:"devid"       gorm:"column:devid"`       //"设备Id"
+	CreatedAt   time.Time `json:"-"           gorm:"column:created_at"`  //"创建时间"
+	UpdatedAt   time.Time `json:"-"           gorm:"column:updated_at"`  //"更新时间"
+}
+
+// BeforeCreate 插入的时候出发
+func (env *Environment) BeforeCreate(scope *gorm.Scope) error {
+	if env.CreatedAt.IsZero() {
+		env.CreatedAt = time.Now()
+	}
+	if env.UpdatedAt.IsZero() {
+		env.UpdatedAt = time.Now()
+	}
+	return nil
+}
+
+// Save 保存环境数值
+func (env *Environment) Save() error {
+	env.ID = 0
+	ret := db.Model(env).Create(env)
+	if ret.Error != nil {
+		log.Println(ret.Error)
+	}
+	return ret.Error
+}
+
 type Temperature struct {
 	Id        int64     `json:"id"         gorm:"column:id"         "ID"`
 	Val       int32     `json:"val"        gorm:"column:val"        "温度值"`

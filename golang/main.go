@@ -26,9 +26,17 @@ func callback() {
 			t := m.Temperature{Val: ret.Temperature, DevId: 0}
 			h := m.Humidity{Val: ret.Humidity, DevId: 0}
 			p := m.Pressure{Val: ret.Pressure, DevId: 0}
+			e := m.Environment{
+				ID:          0,
+				Temperature: ret.Temperature,
+				Humidity:    ret.Humidity,
+				Pressure:    ret.Pressure,
+				DevID:       0,
+			}
 			t.Save()
 			h.Save()
 			p.Save()
+			e.Save()
 
 			if ledon != 0 {
 				ledon = 0
