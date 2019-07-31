@@ -50,6 +50,46 @@ func _search(ts time.Time, _type string, dbname string) (*[]Result, error) {
 	return &ress, ret.Error
 }
 
+type Result2 struct {
+	T   string
+	H   string
+	P   string
+	Ctx string
+}
+
+func _search2(ts time.Time, _type string) (*[]Result2, error) {
+	var ress []Result2
+	selector1 := ""
+	selector := fmt.Sprintf("%4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d", ts.Year(), ts.Month(), ts.Day(), ts.Hour(), ts.Minute(), ts.Second())
+	selector0 := "SELECT ROUND(AVG(temperature), 0) as t, ROUND(AVG(humidity), 0) as h, ROUND(AVG(Pressure), 0) as p, "
+
+	if _type == "hour" {
+		selector1 = selector0 + "DATE_FORMAT(created_at,'%i') as ctx, created_at " +
+			"from environment where  DATE_SUB(?, INTERVAL 1 HOUR) <= created_at " +
+			"GROUP BY ctx ORDER BY created_at ASC"
+	} else if _type == "day" {
+		selector1 = selector0 + "DATE_FORMAT(created_at,'%H') as ctx, created_at " +
+			"from environment where  DATE_SUB(?, INTERVAL 1 DAY) <= created_at " +
+			"GROUP BY ctx ORDER BY created_at ASC"
+	} else if _type == "month" {
+		selector1 = selector0 + "DATE_FORMAT(created_at,'%d') as ctx, created_at " +
+			"from environment where  DATE_SUB(?, INTERVAL 1 MONTH) <= created_at " +
+			"GROUP BY ctx ORDER BY created_at ASC"
+	} else if _type == "year" {
+		selector1 = selector0 + "DATE_FORMAT(created_at,'%m') as ctx, created_at " +
+			"from environment where  DATE_SUB(?, INTERVAL 1 YEAR) <= created_at " +
+			"GROUP BY ctx ORDER BY created_at ASC"
+	} else {
+		return &ress, nil
+	}
+
+	ret := db.Raw(selector1, selector).Scan(&ress)
+	if ret.Error != nil {
+		log.Println(ret.Error)
+	}
+	return &ress, ret.Error
+}
+
 // Environment 环境数值，包括温度湿度气压
 type Environment struct {
 	ID          int64     `json:"id"          gorm:"column:id"`          //"id"
@@ -80,6 +120,10 @@ func (env *Environment) Save() error {
 		log.Println(ret.Error)
 	}
 	return ret.Error
+}
+
+func (this *Environment) Search(ts time.Time, _type string) (*[]Result2, error) {
+	return _search2(ts, _type)
 }
 
 type Temperature struct {

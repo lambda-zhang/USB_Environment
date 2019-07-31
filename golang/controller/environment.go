@@ -99,6 +99,7 @@ func GetPressure(c *gin.Context) {
 
 type env struct {
 	Index       []int     `json:"index"`
+	Ts          []int     `json:"ts"`
 	Temperature []float32 `json:"temperature"`
 	Pressure    []float32 `json:"pressure"`
 	Humidity    []float32 `json:"humidity"`
@@ -168,6 +169,40 @@ func GetEnviroment(c *gin.Context) {
 		index, _ := strconv.ParseInt((*r_p)[i].Ctx, 10, 64)
 		val, _ := strconv.ParseInt((*r_p)[i].Avg, 10, 64)
 		e.Pressure[index] = float32(val) / 100
+	}
+	c.JSON(200, gin.H{"status": 200, "data": e})
+}
+
+func GetEnviroment2(c *gin.Context) {
+	type_str := c.DefaultQuery("type", "day")
+	environment := m.Environment{}
+	ret_e, err1 := environment.Search(time.Now(), type_str)
+	if err1 != nil {
+		c.JSON(200, gin.H{"status": 200, "data": ""})
+		return
+	}
+
+	e := env{}
+	length := len(*ret_e)
+	e.Index = make([]int, length)
+	e.Ts = make([]int, length)
+	e.Temperature = make([]float32, length)
+	e.Pressure = make([]float32, length)
+	e.Humidity = make([]float32, length)
+	for i := 0; i < length; i++ {
+		e.Index[i] = i
+		e.Ts[i] = 0
+	}
+
+	for i := 0; i < len(*ret_e); i++ {
+		index, _ := strconv.ParseInt((*ret_e)[i].Ctx, 10, 64)
+		val_t, _ := strconv.ParseInt((*ret_e)[i].T, 10, 64)
+		val_h, _ := strconv.ParseInt((*ret_e)[i].H, 10, 64)
+		val_p, _ := strconv.ParseInt((*ret_e)[i].P, 10, 64)
+		e.Ts[i] = int(index)
+		e.Temperature[i] = float32(val_t) / 100
+		e.Humidity[i] = float32(val_h) / 100
+		e.Pressure[i] = float32(val_p) / 100
 	}
 	c.JSON(200, gin.H{"status": 200, "data": e})
 }
