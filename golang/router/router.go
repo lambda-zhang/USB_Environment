@@ -41,10 +41,6 @@ func Router() *gin.Engine {
 	r.Use(corsObject)
 
 	r.GET("/ping", ctr.Pong)
-	r.GET("/temperature", ctr.GetTemperature)
-	r.GET("/humidity", ctr.GetHumidity)
-	r.GET("/pressure", ctr.GetPressure)
-	r.GET("/env", ctr.GetEnviroment)
 	r.GET("/env2", ctr.GetEnviroment2)
 	return r
 }

@@ -23,9 +23,6 @@ func callback() {
 		ret, err2 := usbenv.Get_Environment()
 		if err2 == nil {
 			log.Printf("Temperature=%d Pressure=%d Humidity=%d\n", ret.Temperature, ret.Pressure, ret.Humidity)
-			t := m.Temperature{Val: ret.Temperature, DevId: 0}
-			h := m.Humidity{Val: ret.Humidity, DevId: 0}
-			p := m.Pressure{Val: ret.Pressure, DevId: 0}
 			e := m.Environment{
 				ID:          0,
 				Temperature: ret.Temperature,
@@ -33,9 +30,6 @@ func callback() {
 				Pressure:    ret.Pressure,
 				DevID:       0,
 			}
-			t.Save()
-			h.Save()
-			p.Save()
 			e.Save()
 
 			if ledon != 0 {

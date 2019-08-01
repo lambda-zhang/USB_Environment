@@ -57,6 +57,7 @@ func (this *USB_env) USB_init() error {
 
 	this.iface, err = this.config.Interface(0, 0)
 	if err != nil {
+		this.dev.Reset()
 		log.Println(err)
 		return err
 	}
