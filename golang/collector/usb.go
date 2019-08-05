@@ -39,6 +39,7 @@ func (this *USB_env) USB_init() error {
 
 	this.dev, err = this.ctx.OpenDeviceWithVIDPID(gousb.ID(vid), gousb.ID(pid))
 	if this.dev == nil || err != nil {
+		log.Println(err)
 		return errors.New("Device not found")
 	}
 
