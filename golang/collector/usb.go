@@ -47,12 +47,14 @@ func (this *USB_env) USB_init() error {
 
 	if err = this.dev.SetAutoDetach(true); err != nil {
 		log.Println(err)
+		this.dev.Reset()
 		return err
 	}
 
 	this.config, err = this.dev.Config(cfg)
 	if err != nil {
 		log.Println(err)
+		this.dev.Reset()
 		return err
 	}
 
