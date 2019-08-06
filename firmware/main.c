@@ -13,6 +13,8 @@
 #define VERSION_MAJOR 0
 #define VERSION_MINOR 1
 
+#define Reset_AVR()    wdt_enable(WDTO_30MS); while(1) {}
+
 typedef struct _env {
 	volatile long temperature;
 	volatile unsigned long pressure;
@@ -102,7 +104,9 @@ int main(void)
 	int32_t temperature = 0;
 	int32_t pressure = 0;
 	#define CNTMAX 120000
+	#define CNTMAX2 1000
 	long cnt = CNTMAX;
+	long cnt2 = 0;
 
 	//	wdt_enable(WDTO_1S);
 	/* let debug routines init the uart if they want to */
@@ -147,6 +151,11 @@ int main(void)
         if(cnt>CNTMAX) {
 			environment.humidity = SI7021_humidity();
 			cnt = 0;
+			cnt2 ++;
+		}
+		if(cnt2 >= CNTMAX2) {
+			cnt2 = 0;
+			Reset_AVR();
 		}
 	}
 	return 0;
