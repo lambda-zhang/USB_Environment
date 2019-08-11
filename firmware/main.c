@@ -103,10 +103,9 @@ int main(void)
 {
 	int32_t temperature = 0;
 	int32_t pressure = 0;
-	#define CNTMAX 120000
-	#define CNTMAX2 1000
+	#define CNTMAX 240000
 	long cnt = CNTMAX;
-	long cnt2 = 0;
+	int ledon = 0;
 
 	//	wdt_enable(WDTO_1S);
 	/* let debug routines init the uart if they want to */
@@ -136,27 +135,18 @@ int main(void)
 	for(;;) {
         cnt++;
 		usbPoll();
-        if(cnt>CNTMAX) {
-			bmp085Convert(BMP085_calibration_int16_t, BMP085_calibration_uint16_t,&temperature, &pressure);
-			environment.temperature = temperature;
-			environment.pressure = pressure;
+        if(cnt<=CNTMAX) {
+			continue;
 		}
 
-		usbPoll();
-        if(cnt>CNTMAX) {
-			environment.temperature2 = SI7021_temperature();
-		}
-
-		usbPoll();
-        if(cnt>CNTMAX) {
-			environment.humidity = SI7021_humidity();
-			cnt = 0;
-			cnt2 ++;
-		}
-		if(cnt2 >= CNTMAX2) {
-			cnt2 = 0;
-			Reset_AVR();
-		}
+		bmp085Convert(BMP085_calibration_int16_t, BMP085_calibration_uint16_t,&temperature, &pressure);
+		environment.temperature = temperature;
+		environment.pressure = pressure;
+		environment.temperature2 = SI7021_temperature();
+		environment.humidity = SI7021_humidity();
+		cnt = 0;
+		ledon = (ledon == 0) ? 1 : 0;
+		set_led(ledon);
 	}
 	return 0;
 }

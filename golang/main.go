@@ -37,7 +37,7 @@ func callback() {
 			} else {
 				ledon = 1
 			}
-			usbenv.Set_LED(ledon)
+			// usbenv.Set_LED(ledon)
 		}
 	}
 	usbenv.USB_close()
